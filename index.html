@@ -68,7 +68,7 @@
     document.getElementById('btn-open').href = url;
 
     // Discord CDN cho phép CORS fetch trực tiếp — chỉ block iframe src
-    fetch(url)
+    fetch('https://solitary-frost-fbee.idoldange61.workers.dev/?url=' + encodeURIComponent(url))
       .then(res => {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.text();
