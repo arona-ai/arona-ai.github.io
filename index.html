@@ -68,13 +68,25 @@
     document.getElementById('btn-open').href = url;
 
     // Discord CDN cho phép CORS fetch trực tiếp — chỉ block iframe src
+    const isMarkdown = decodeURIComponent(url).split('?')[0].endsWith('.md');
+
     fetch('https://solitary-frost-fbee.idoldange61.workers.dev/?url=' + encodeURIComponent(url))
       .then(res => {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.text();
       })
-      .then(html => {
-        frame.srcdoc = html;
+      .then(content => {
+        if (isMarkdown) {
+          frame.srcdoc = `<!DOCTYPE html><html><head>
+            <meta charset="UTF-8">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"><\/script>
+            <style>body{font-family:sans-serif;max-width:860px;margin:40px auto;padding:0 24px;line-height:1.6;color:#222}pre{background:#f4f4f4;padding:12px;border-radius:6px;overflow:auto}code{background:#f4f4f4;padding:2px 5px;border-radius:4px}img{max-width:100%}</style>
+            </head><body><div id="md"></div>
+            <script>document.getElementById('md').innerHTML=marked.parse(${JSON.stringify(content)})<\/script>
+            </body></html>`;
+        } else {
+          frame.srcdoc = content;
+        }
         status.classList.add('hidden');
       })
       .catch(err => {
