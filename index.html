@@ -70,6 +70,7 @@
     const decodedUrl = decodeURIComponent(url).split('?')[0];
     const isMarkdown = decodedUrl.endsWith('.md');
     const isMermaid = decodedUrl.endsWith('.mermaid');
+    const isJsx = decodedUrl.endsWith('.jsx');
 
     fetch('https://solitary-frost-fbee.idoldange61.workers.dev/?url=' + encodeURIComponent(url))
       .then(res => {
@@ -77,7 +78,23 @@
         return res.text();
       })
       .then(content => {
-        if (isMermaid) {
+        if (isJsx) {
+          frame.srcdoc = `<!DOCTYPE html><html><head>
+            <meta charset="UTF-8">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"><\/script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"><\/script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"><\/script>
+            <style>body{margin:0;padding:16px;font-family:sans-serif}</style>
+            </head><body>
+            <div id="root"></div>
+            <script type="text/babel">
+            ${content}
+            const __export = typeof App !== 'undefined' ? App : (typeof default_export !== 'undefined' ? default_export : null);
+            if (__export) ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(__export));
+            <\/script>
+            </body></html>`;
+          status.classList.add('hidden');
+        } else if (isMermaid) {
           frame.srcdoc = `<!DOCTYPE html><html><head>
             <meta charset="UTF-8">
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"><\/script>
