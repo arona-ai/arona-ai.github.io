@@ -67,8 +67,9 @@
     document.getElementById('url-label').textContent = filename;
     document.getElementById('btn-open').href = url;
 
-    // Discord CDN cho phép CORS fetch trực tiếp — chỉ block iframe src
-    const isMarkdown = decodeURIComponent(url).split('?')[0].endsWith('.md');
+    const decodedUrl = decodeURIComponent(url).split('?')[0];
+    const isMarkdown = decodedUrl.endsWith('.md');
+    const isMermaid = decodedUrl.endsWith('.mermaid');
 
     fetch('https://solitary-frost-fbee.idoldange61.workers.dev/?url=' + encodeURIComponent(url))
       .then(res => {
@@ -76,7 +77,17 @@
         return res.text();
       })
       .then(content => {
-        if (isMarkdown) {
+        if (isMermaid) {
+          frame.srcdoc = `<!DOCTYPE html><html><head>
+            <meta charset="UTF-8">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"><\/script>
+            <style>body{background:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px;box-sizing:border-box}.mermaid{max-width:100%}</style>
+            </head><body>
+            <div class="mermaid">${content.replace(/</g,'&lt;')}</div>
+            <script>mermaid.initialize({startOnLoad:true,theme:'default'})<\/script>
+            </body></html>`;
+          status.classList.add('hidden');
+        } else if (isMarkdown) {
           frame.srcdoc = `<!DOCTYPE html><html><head>
             <meta charset="UTF-8">
             <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"><\/script>
