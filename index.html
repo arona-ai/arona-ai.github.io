@@ -446,6 +446,13 @@ if (!url) {
   dlBtn.download = filename;
   document.title = filename + ' — SCHALE';
 
+  // If no preview renderer exists for this ext, hide Preview tab and go straight to Source
+  const hasPreview = ext in PREVIEW_TYPES;
+  if (!hasPreview) {
+    document.getElementById('tab-preview').style.display = 'none';
+    switchTab('source');
+  }
+
   // Images & PDFs: load directly, no proxy needed
   if (['png','jpg','jpeg','gif','webp','bmp','ico'].includes(ext)) {
     frame.src = url;
