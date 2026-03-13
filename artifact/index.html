@@ -1,126 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Artifacts</title>
 <link rel="icon" type="image/png" href="https://avatars.githubusercontent.com/u/144466234?s=400&u=a3c692da068148c0a68af8ffcf065fe19fbd9a11&v=4">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" disabled>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; background: #111110; font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+  html, body { height: 100%; font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+
+  /* ── Theme variables ── */
+  :root {
+    --bg:          #111110;
+    --toolbar-bg:  #1a1917;
+    --border:      #272522;
+    --border-2:    #1e1d1b;
+    --text-muted:  #605d58;
+    --text-dim:    #413e39;
+    --text-main:   #e8e5df;
+    --text-code:   #c9c5be;
+    --tab-active:  #272522;
+    --src-bg:      #0d0d0c;
+    --data-bg:     #0d0d0c;
+    --ln-color:    #3a3835;
+    --csv-th-bg:   #1a1917;
+    --csv-even:    #131211;
+    --csv-hover:   #1e1d1b;
+    --j-key:       #7aa4d4;
+    --j-str:       #a8c986;
+    --j-num:       #d49c6b;
+    --j-bool:      #c97b7b;
+    --j-null:      #808080;
+  }
+  [data-theme="light"] {
+    --bg:          #ffffff;
+    --toolbar-bg:  #f6f8fa;
+    --border:      #d1d9e0;
+    --border-2:    #d1d9e0;
+    --text-muted:  #59636e;
+    --text-dim:    #8c959f;
+    --text-main:   #1f2328;
+    --text-code:   #1f2328;
+    --tab-active:  #ffffff;
+    --src-bg:      #ffffff;
+    --data-bg:     #ffffff;
+    --ln-color:    #aaaaaa;
+    --csv-th-bg:   #f6f8fa;
+    --csv-even:    #f6f8fa;
+    --csv-hover:   #eaeef2;
+    --j-key:       #0969da;
+    --j-str:       #116329;
+    --j-num:       #953800;
+    --j-bool:      #cf222e;
+    --j-null:      #59636e;
+  }
+
+  body { background: var(--bg); transition: background 0.15s; }
 
   /* ── Toolbar ── */
   #toolbar {
     position: fixed; top: 0; left: 0; right: 0; height: 40px;
-    background: #1a1917; border-bottom: 1px solid #272522;
+    background: var(--toolbar-bg); border-bottom: 1px solid var(--border);
     display: flex; align-items: center; gap: 8px; padding: 0 12px; z-index: 100;
+    transition: background 0.15s, border-color 0.15s;
   }
-  .logo { font-size: 11px; font-weight: 500; letter-spacing: 0.15em; color: #605d58; flex-shrink: 0; }
-  .sep  { width: 1px; height: 16px; background: #272522; flex-shrink: 0; }
+  .logo { font-size: 11px; font-weight: 500; letter-spacing: 0.15em; color: var(--text-muted); flex-shrink: 0; }
+  .sep  { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
 
   /* ── Tabs ── */
   .tabs { display: flex; gap: 2px; flex-shrink: 0; }
   .tab {
     height: 24px; padding: 0 10px; border: 1px solid transparent; border-radius: 5px;
-    background: none; color: #605d58; cursor: pointer;
+    background: none; color: var(--text-muted); cursor: pointer;
     font-size: 11px; font-family: inherit; letter-spacing: 0.05em;
     display: flex; align-items: center; gap: 5px; transition: all 0.12s;
     white-space: nowrap;
   }
-  .tab:hover  { color: #c9c5be; border-color: #272522; }
-  .tab.active { color: #e8e5df; border-color: #272522; background: #272522; }
+  .tab:hover  { color: var(--text-main); border-color: var(--border); }
+  .tab.active { color: var(--text-main); border-color: var(--border); background: var(--tab-active); }
   .tab-icon {
     width: 12px; height: 12px; stroke: currentColor; fill: none;
     stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
   }
-  .tab-code {
-    font-size: 11px; font-family: inherit; letter-spacing: -0.02em; flex-shrink: 0;
-  }
+  .tab-code { font-size: 11px; font-family: inherit; letter-spacing: -0.02em; flex-shrink: 0; }
 
-  .label  { font-size: 11px; color: #605d58; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 360px; }
+  .label  { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 360px; }
   .spacer { flex: 1; }
   .badge  {
-    font-size: 9px; letter-spacing: 0.1em; color: #413e39; border: 1px solid #272522;
-    border-radius: 4px; padding: 1px 5px; flex-shrink: 0;
+    font-size: 9px; letter-spacing: 0.1em; color: var(--text-dim);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; flex-shrink: 0;
   }
   .icon-btn {
-    width: 26px; height: 26px; border: 1px solid #272522; border-radius: 5px;
-    background: none; color: #605d58; cursor: pointer; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; font-size: 13px;
+    width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 5px;
+    background: none; color: var(--text-muted); cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
     text-decoration: none; transition: all 0.12s;
   }
-  .icon-btn:hover { color: #e8e5df; border-color: #605d58; }
-  .icon-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-btn:hover { color: var(--text-main); border-color: var(--text-muted); }
+  .icon-btn svg {
+    width: 13px; height: 13px; stroke: currentColor; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ── Theme toggle icon swap ── */
+  #icon-moon { display: block; }
+  #icon-sun  { display: none; }
+  [data-theme="light"] #icon-moon { display: none; }
+  [data-theme="light"] #icon-sun  { display: block; }
 
   /* ── Content areas ── */
   #frame-wrap, #source-wrap, #data-wrap {
-    position: fixed; top: 40px; left: 0; right: 0; bottom: 0;
-    display: none;
+    position: fixed; top: 40px; left: 0; right: 0; bottom: 0; display: none;
   }
   #frame-wrap.active, #source-wrap.active, #data-wrap.active { display: block; }
 
-  iframe { width: 100%; height: 100%; border: none; background: #fff; }
+  iframe { width: 100%; height: 100%; border: none; }
 
   /* ── Source pane ── */
-  #source-wrap { overflow: auto; background: #0d0d0c; }
+  #source-wrap { overflow: auto; background: var(--src-bg); transition: background 0.15s; }
   #source-wrap pre {
-    margin: 0; padding: 20px 24px;
-    font-family: inherit; font-size: 13px; line-height: 1.65;
-    tab-size: 2; min-height: 100%;
-    color: #c9c5be;
+    margin: 0; padding: 20px 24px; font-family: inherit; font-size: 13px;
+    line-height: 1.65; tab-size: 2; min-height: 100%; color: var(--text-code);
   }
   #source-wrap code { font-family: inherit !important; }
-
-  /* override hljs bg to match our theme */
   .hljs { background: transparent !important; }
 
-  /* line numbers */
   .ln-wrap { display: flex; }
   .ln-nums {
     padding: 0 16px 0 0; text-align: right; user-select: none;
-    color: #3a3835; font-size: 13px; line-height: 1.65; flex-shrink: 0;
-    border-right: 1px solid #1e1d1b; margin-right: 20px;
+    color: var(--ln-color); font-size: 13px; line-height: 1.65; flex-shrink: 0;
+    border-right: 1px solid var(--border-2); margin-right: 20px;
   }
   .ln-code { flex: 1; overflow-x: auto; }
 
-  /* ── Data pane (CSV / JSON) ── */
-  #data-wrap { overflow: auto; background: #0d0d0c; padding: 20px 24px; }
+  /* ── Data pane ── */
+  #data-wrap { overflow: auto; background: var(--data-bg); padding: 20px 24px; transition: background 0.15s; }
 
-  /* JSON */
-  #json-out {
-    font-family: inherit; font-size: 12.5px; line-height: 1.7;
-    white-space: pre; color: #c9c5be;
-  }
-  .j-key   { color: #7aa4d4; }
-  .j-str   { color: #a8c986; }
-  .j-num   { color: #d49c6b; }
-  .j-bool  { color: #c97b7b; }
-  .j-null  { color: #808080; }
+  #json-out { font-family: inherit; font-size: 12.5px; line-height: 1.7; white-space: pre; color: var(--text-code); }
+  .j-key  { color: var(--j-key); }
+  .j-str  { color: var(--j-str); }
+  .j-num  { color: var(--j-num); }
+  .j-bool { color: var(--j-bool); }
+  .j-null { color: var(--j-null); }
 
-  /* CSV table */
-  #csv-out { border-collapse: collapse; font-size: 12px; color: #c9c5be; width: 100%; }
+  #csv-out { border-collapse: collapse; font-size: 12px; color: var(--text-code); width: 100%; }
   #csv-out th {
-    background: #1a1917; color: #e8e5df; font-weight: 600;
-    padding: 7px 14px; border: 1px solid #272522;
-    text-align: left; position: sticky; top: 0;
+    background: var(--csv-th-bg); color: var(--text-main); font-weight: 600;
+    padding: 7px 14px; border: 1px solid var(--border); text-align: left; position: sticky; top: 0;
   }
-  #csv-out td { padding: 5px 14px; border: 1px solid #1e1d1b; }
-  #csv-out tr:nth-child(even) td { background: #131211; }
-  #csv-out tr:hover td { background: #1e1d1b; }
+  #csv-out td { padding: 5px 14px; border: 1px solid var(--border-2); }
+  #csv-out tr:nth-child(even) td { background: var(--csv-even); }
+  #csv-out tr:hover td { background: var(--csv-hover); }
 
   /* ── Status overlay ── */
   #status {
     position: fixed; inset: 40px 0 0;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 12px; font-size: 12px; color: #605d58; pointer-events: none;
+    gap: 12px; font-size: 12px; color: var(--text-muted); pointer-events: none;
   }
   #status.hidden { display: none; }
   #status.error  { color: #c94040; }
   .spinner {
-    width: 18px; height: 18px; border: 2px solid #272522;
-    border-top-color: #605d58; border-radius: 50%;
+    width: 18px; height: 18px; border: 2px solid var(--border);
+    border-top-color: var(--text-muted); border-radius: 50%;
     animation: spin 0.7s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -147,6 +192,12 @@
 
   <div class="spacer"></div>
 
+  <!-- Theme toggle: moon = currently dark (click → light), sun = currently light (click → dark) -->
+  <button class="icon-btn" id="btn-theme" title="Toggle theme" onclick="toggleTheme()">
+    <svg id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="icon-sun"  viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+
   <button class="icon-btn" id="btn-copy" title="Copy source" onclick="copySource()">
     <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
   </button>
@@ -155,17 +206,14 @@
   </a>
 </div>
 
-<!-- Preview tab -->
 <div id="frame-wrap" class="active">
   <iframe id="preview" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe>
 </div>
 
-<!-- Source tab -->
 <div id="source-wrap">
   <pre><div class="ln-wrap"><div class="ln-nums" id="ln-nums"></div><div class="ln-code"><code id="source-code"></code></div></div></pre>
 </div>
 
-<!-- Data tab (JSON / CSV) -->
 <div id="data-wrap">
   <div id="json-out" style="display:none"></div>
   <table id="csv-out" style="display:none"></table>
@@ -180,61 +228,73 @@ const url    = params.get('url');
 const status = document.getElementById('status');
 const frame  = document.getElementById('preview');
 
-let rawContent = '';
-let currentTab = 'preview';
+let rawContent   = '';
+let currentTab   = 'preview';
+let currentTheme = 'dark';
 
-// ── ext detection ────────────────────────────────────────────────────────────
+// ── Theme ─────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  document.getElementById('hljs-dark').disabled  = (currentTheme === 'light');
+  document.getElementById('hljs-light').disabled = (currentTheme === 'dark');
+
+  // Re-render source with new hljs colours
+  if (rawContent && url) renderSource(getExt(url), rawContent);
+
+  // Re-render preview srcdoc for formats that embed theme
+  if (rawContent && url && currentTab === 'preview') {
+    const ext = getExt(url);
+    if (['md','jsx','tsx','mermaid','mmd','svg','png','jpg','jpeg','gif','webp','bmp','ico'].includes(ext)) {
+      renderPreview(ext, rawContent);
+    }
+  }
+}
+
+// ── ext detection ─────────────────────────────────────────────────────────────
 function getExt(u) {
   return decodeURIComponent(u).split('?')[0].split('/').pop().split('.').pop().toLowerCase();
 }
 
 const PREVIEW_TYPES = {
-  html : 'HTML',  htm : 'HTML',
-  jsx  : 'React', tsx : 'React',
-  md   : 'Markdown',
-  mermaid: 'Mermaid', mmd: 'Mermaid',
-  svg  : 'SVG',
-  json : 'JSON',
-  csv  : 'CSV',
-  pdf  : 'PDF',
+  html:'HTML', htm:'HTML', jsx:'React', tsx:'React', md:'Markdown',
+  mermaid:'Mermaid', mmd:'Mermaid', svg:'SVG', json:'JSON', csv:'CSV', pdf:'PDF',
   png:'Image', jpg:'Image', jpeg:'Image', gif:'Image', webp:'Image', bmp:'Image', ico:'Image',
 };
 const HLJS_LANG = {
   py:'python', js:'javascript', ts:'typescript', jsx:'javascript', tsx:'typescript',
-  sh:'bash', bash:'bash', zsh:'bash',
-  css:'css', scss:'scss', less:'less',
+  sh:'bash', bash:'bash', zsh:'bash', css:'css', scss:'scss', less:'less',
   json:'json', yaml:'yaml', yml:'yaml', toml:'toml',
   md:'markdown', html:'xml', htm:'xml', xml:'xml',
   sql:'sql', rs:'rust', go:'go', rb:'ruby', java:'java', cs:'csharp',
   cpp:'cpp', c:'c', h:'c', kt:'kotlin', swift:'swift', php:'php',
   r:'r', m:'matlab', lua:'lua', dart:'dart',
-  dockerfile: 'dockerfile', makefile: 'makefile',
-  txt:'plaintext', log:'plaintext', csv:'plaintext',
+  dockerfile:'dockerfile', makefile:'makefile', txt:'plaintext', log:'plaintext', csv:'plaintext',
 };
 
-// ── tab switching ─────────────────────────────────────────────────────────────
+// ── Tab switching ─────────────────────────────────────────────────────────────
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
-
   document.getElementById('frame-wrap').classList.remove('active');
   document.getElementById('source-wrap').classList.remove('active');
   document.getElementById('data-wrap').classList.remove('active');
-
   const ext = getExt(url || '');
   if (tab === 'preview') {
-    if (['json','csv'].includes(ext)) {
-      document.getElementById('data-wrap').classList.add('active');
-    } else {
-      document.getElementById('frame-wrap').classList.add('active');
-    }
+    ['json','csv'].includes(ext)
+      ? document.getElementById('data-wrap').classList.add('active')
+      : document.getElementById('frame-wrap').classList.add('active');
   } else {
     document.getElementById('source-wrap').classList.add('active');
   }
 }
 
-// ── copy source ───────────────────────────────────────────────────────────────
+// ── Copy source ───────────────────────────────────────────────────────────────
 function copySource() {
   navigator.clipboard.writeText(rawContent).then(() => {
     const btn = document.getElementById('btn-copy');
@@ -243,33 +303,48 @@ function copySource() {
   });
 }
 
-// ── render preview ────────────────────────────────────────────────────────────
+// ── Render preview ────────────────────────────────────────────────────────────
 function renderPreview(ext, content) {
+  const dark = currentTheme === 'dark';
+
+  // GitHub dark/light palette
+  const bg       = dark ? '#0d1117' : '#ffffff';
+  const fg       = dark ? '#e6edf3' : '#1f2328';
+  const fgMuted  = dark ? '#8b949e' : '#59636e';
+  const border   = dark ? '#30363d' : '#d1d9e0';
+  const codeBg   = dark ? '#161b22' : '#f6f8fa';
+  const inlineBg = dark ? 'rgba(110,118,129,0.2)' : 'rgba(175,184,193,0.2)';
+  const tblEven  = dark ? '#161b22' : '#f6f8fa';
+  const linkFg   = dark ? '#58a6ff' : '#0969da';
+  const bqBorder = dark ? '#3d444d' : '#d1d9e0';
+  const hljsCSS  = dark
+    ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css'
+    : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+
   if (['png','jpg','jpeg','gif','webp','bmp','ico'].includes(ext)) {
     frame.srcdoc = `<!DOCTYPE html><html><head><style>
-      body{margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}
+      body{margin:0;background:${bg};display:flex;align-items:center;justify-content:center;min-height:100vh}
       img{max-width:100%;max-height:100vh;object-fit:contain}
     </style></head><body><img src="${url}"></body></html>`;
     return;
   }
-  if (ext === 'pdf') {
-    frame.src = url;
-    return;
-  }
+  if (ext === 'pdf') { frame.src = url; return; }
+
   if (ext === 'svg') {
     frame.srcdoc = `<!DOCTYPE html><html><head><style>
-      body{margin:0;background:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
-      img{max-width:100%;max-height:100vh}
+      body{margin:0;background:${bg};display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+      svg,img{max-width:100%;max-height:100vh}
     </style></head><body>${content}</body></html>`;
     return;
   }
+
   if (['jsx','tsx'].includes(ext)) {
     frame.srcdoc = `<!DOCTYPE html><html><head>
       <meta charset="UTF-8">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"><\/script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"><\/script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"><\/script>
-      <style>body{margin:0;padding:16px;font-family:sans-serif}</style>
+      <style>body{margin:0;padding:16px;font-family:sans-serif;background:${bg};color:${fg}}</style>
       </head><body>
       <div id="root"></div>
       <script type="text/babel">
@@ -279,80 +354,77 @@ function renderPreview(ext, content) {
       <\/script></body></html>`;
     return;
   }
+
   if (['mermaid','mmd'].includes(ext)) {
     frame.srcdoc = `<!DOCTYPE html><html><head>
       <meta charset="UTF-8">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"><\/script>
-      <style>body{background:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px}.mermaid{max-width:100%}</style>
+      <style>body{background:${bg};display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px}.mermaid{max-width:100%}</style>
       </head><body>
       <div class="mermaid">${content.replace(/</g,'&lt;')}</div>
-      <script>mermaid.initialize({startOnLoad:true,theme:'default'})<\/script>
+      <script>mermaid.initialize({startOnLoad:true,theme:'${dark ? 'dark' : 'default'}'})<\/script>
       </body></html>`;
     return;
   }
-  if (['md'].includes(ext)) {
+
+  if (ext === 'md') {
     frame.srcdoc = `<!DOCTYPE html><html><head>
       <meta charset="UTF-8">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"><\/script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"><\/script>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+      <link rel="stylesheet" href="${hljsCSS}">
       <style>
         *, *::before, *::after { box-sizing: border-box; }
         body {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-          font-size: 16px; line-height: 1.6; color: #1f2328;
+          font-size: 16px; line-height: 1.6;
+          color: ${fg}; background: ${bg};
           max-width: 860px; margin: 40px auto; padding: 0 32px 80px;
-          background: #fff;
         }
-        h1,h2,h3,h4,h5,h6 {
-          margin: 24px 0 16px; font-weight: 600; line-height: 1.25; color: #1f2328;
-        }
-        h1 { font-size: 2em; padding-bottom: .3em; border-bottom: 1px solid #d1d9e0; }
-        h2 { font-size: 1.5em; padding-bottom: .3em; border-bottom: 1px solid #d1d9e0; }
+        h1,h2,h3,h4,h5,h6 { margin: 24px 0 16px; font-weight: 600; line-height: 1.25; color: ${fg}; }
+        h1 { font-size: 2em;    padding-bottom: .3em; border-bottom: 1px solid ${border}; }
+        h2 { font-size: 1.5em;  padding-bottom: .3em; border-bottom: 1px solid ${border}; }
         h3 { font-size: 1.25em; }
         h4 { font-size: 1em; }
         h5 { font-size: .875em; }
-        h6 { font-size: .85em; color: #59636e; }
+        h6 { font-size: .85em; color: ${fgMuted}; }
         p { margin: 0 0 16px; }
-        a { color: #0969da; text-decoration: none; }
+        a { color: ${linkFg}; text-decoration: none; }
         a:hover { text-decoration: underline; }
         blockquote {
           margin: 0 0 16px; padding: 0 1em;
-          color: #59636e; border-left: 4px solid #d1d9e0;
+          color: ${fgMuted}; border-left: 4px solid ${bqBorder};
         }
         blockquote > :first-child { margin-top: 0; }
-        blockquote > :last-child { margin-bottom: 0; }
+        blockquote > :last-child  { margin-bottom: 0; }
         ul, ol { margin: 0 0 16px; padding-left: 2em; }
         li { margin: 4px 0; }
         li > p { margin-top: 16px; }
         li.task-list-item { list-style: none; margin-left: -1.5em; }
         li.task-list-item input[type=checkbox] {
-          margin-right: 6px; vertical-align: middle; accent-color: #0969da;
+          margin-right: 6px; vertical-align: middle; accent-color: ${linkFg};
         }
         code {
-          background: #afb8c133; border-radius: 6px;
+          background: ${inlineBg}; border-radius: 6px;
           font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-          font-size: .875em; padding: .2em .4em; color: #1f2328;
+          font-size: .875em; padding: .2em .4em; color: ${fg};
         }
         pre {
           margin: 0 0 16px; padding: 16px; overflow: auto;
-          background: #f6f8fa; border-radius: 6px;
-          border: 1px solid #d1d9e0; line-height: 1.45;
+          background: ${codeBg}; border-radius: 6px; border: 1px solid ${border}; line-height: 1.45;
         }
-        pre code {
-          background: transparent; border-radius: 0;
-          font-size: 85%; padding: 0; color: inherit; white-space: pre;
-        }
+        pre code { background: transparent; border-radius: 0; font-size: 85%; padding: 0; color: inherit; white-space: pre; }
+        .hljs { background: transparent !important; }
         table { border-collapse: collapse; width: 100%; margin: 0 0 16px; display: block; overflow-x: auto; }
-        th, td { padding: 6px 13px; border: 1px solid #d1d9e0; }
-        th { background: #f6f8fa; font-weight: 600; text-align: left; }
-        tr:nth-child(even) td { background: #f6f8fa; }
-        hr { border: 0; border-top: 4px solid #d1d9e0; margin: 24px 0; }
+        th, td { padding: 6px 13px; border: 1px solid ${border}; }
+        th { background: ${codeBg}; font-weight: 600; text-align: left; }
+        tr:nth-child(even) td { background: ${tblEven}; }
+        hr { border: 0; border-top: 1px solid ${border}; margin: 24px 0; }
         img { max-width: 100%; border-radius: 6px; }
-        del { color: #59636e; }
+        del { color: ${fgMuted}; }
         kbd {
-          background: #f6f8fa; border: 1px solid #d1d9e0; border-radius: 6px;
-          box-shadow: inset 0 -1px 0 #d1d9e0; display: inline-block;
+          background: ${codeBg}; border: 1px solid ${border}; border-radius: 6px;
+          box-shadow: inset 0 -1px 0 ${border}; display: inline-block;
           font-family: inherit; font-size: 85%; padding: 3px 5px;
         }
       </style>
@@ -363,9 +435,7 @@ function renderPreview(ext, content) {
         const renderer = new marked.Renderer();
         renderer.listitem = function(text, task, checked) {
           if (task) {
-            const chk = checked
-              ? '<input type="checkbox" checked disabled>'
-              : '<input type="checkbox" disabled>';
+            const chk = checked ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>';
             return '<li class="task-list-item">' + chk + ' ' + text + '</li>';
           }
           return '<li>' + text + '</li>';
@@ -383,64 +453,50 @@ function renderPreview(ext, content) {
       </body></html>`;
     return;
   }
-  if (ext === 'json') {
-    renderJSON(content);
-    return;
-  }
-  if (ext === 'csv') {
-    renderCSV(content);
-    return;
-  }
-  // default: html / htm or unknown → raw iframe
+
+  if (ext === 'json') { renderJSON(content); return; }
+  if (ext === 'csv')  { renderCSV(content);  return; }
+
+  // default: html/htm or unknown → raw iframe
   frame.srcdoc = content;
 }
 
 // ── JSON renderer ─────────────────────────────────────────────────────────────
 function colorJSON(val, indent = 0) {
-  const pad = '  '.repeat(indent);
+  const pad  = '  '.repeat(indent);
   const pad1 = '  '.repeat(indent + 1);
-  if (val === null)  return `<span class="j-null">null</span>`;
+  if (val === null)             return `<span class="j-null">null</span>`;
   if (typeof val === 'boolean') return `<span class="j-bool">${val}</span>`;
   if (typeof val === 'number')  return `<span class="j-num">${val}</span>`;
   if (typeof val === 'string')  return `<span class="j-str">${JSON.stringify(val)}</span>`;
   if (Array.isArray(val)) {
     if (!val.length) return '[]';
-    const items = val.map(v => pad1 + colorJSON(v, indent + 1)).join(',\n');
-    return `[\n${items}\n${pad}]`;
+    return `[\n${val.map(v => pad1 + colorJSON(v, indent + 1)).join(',\n')}\n${pad}]`;
   }
   if (typeof val === 'object') {
     const keys = Object.keys(val);
     if (!keys.length) return '{}';
-    const items = keys.map(k =>
+    return `{\n${keys.map(k =>
       `${pad1}<span class="j-key">${JSON.stringify(k)}</span>: ${colorJSON(val[k], indent + 1)}`
-    ).join(',\n');
-    return `{\n${items}\n${pad}}`;
+    ).join(',\n')}\n${pad}}`;
   }
   return String(val);
 }
-
 function renderJSON(content) {
+  document.getElementById('csv-out').style.display = 'none';
   const out = document.getElementById('json-out');
-  const tbl = document.getElementById('csv-out');
-  tbl.style.display = 'none';
   out.style.display = 'block';
-  try {
-    const parsed = JSON.parse(content);
-    out.innerHTML = colorJSON(parsed);
-  } catch(e) {
-    out.textContent = content;
-  }
+  try { out.innerHTML = colorJSON(JSON.parse(content)); }
+  catch { out.textContent = content; }
   document.getElementById('data-wrap').classList.add('active');
   document.getElementById('frame-wrap').classList.remove('active');
 }
 
 // ── CSV renderer ──────────────────────────────────────────────────────────────
 function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  return lines.map(line => {
+  return text.trim().split('\n').map(line => {
     const cells = []; let cur = ''; let inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
+    for (const c of line) {
       if (c === '"') { inQ = !inQ; continue; }
       if (c === ',' && !inQ) { cells.push(cur); cur = ''; continue; }
       cur += c;
@@ -450,34 +506,23 @@ function parseCSV(text) {
   });
 }
 function renderCSV(content) {
-  const out = document.getElementById('json-out');
+  document.getElementById('json-out').style.display = 'none';
   const tbl = document.getElementById('csv-out');
-  out.style.display = 'none';
-  tbl.style.display = 'table';
-  tbl.innerHTML = '';
+  tbl.style.display = 'table'; tbl.innerHTML = '';
   const rows = parseCSV(content);
   if (!rows.length) return;
-  const thead = tbl.createTHead();
-  const hrow = thead.insertRow();
-  const th0 = document.createElement('th');
-  th0.style.cssText = 'color:#3a3835;width:40px;text-align:right';
-  th0.textContent = '#';
-  hrow.appendChild(th0);
-  rows[0].forEach(h => {
-    const th = document.createElement('th');
-    th.textContent = h;
-    hrow.appendChild(th);
-  });
+  const hrow = tbl.createTHead().insertRow();
+  const th0  = document.createElement('th');
+  th0.style.cssText = 'color:var(--ln-color);width:40px;text-align:right';
+  th0.textContent = '#'; hrow.appendChild(th0);
+  rows[0].forEach(h => { const th = document.createElement('th'); th.textContent = h; hrow.appendChild(th); });
   const tbody = tbl.createTBody();
   rows.slice(1).forEach((row, i) => {
     const tr = tbody.insertRow();
     const td0 = tr.insertCell();
     td0.textContent = i + 1;
-    td0.style.cssText = 'color:#3a3835;text-align:right;user-select:none';
-    row.forEach(cell => {
-      const td = tr.insertCell();
-      td.textContent = cell;
-    });
+    td0.style.cssText = 'color:var(--ln-color);text-align:right;user-select:none';
+    row.forEach(cell => { const td = tr.insertCell(); td.textContent = cell; });
   });
   document.getElementById('data-wrap').classList.add('active');
   document.getElementById('frame-wrap').classList.remove('active');
@@ -487,19 +532,11 @@ function renderCSV(content) {
 function renderSource(ext, content) {
   const lang = HLJS_LANG[ext] || 'plaintext';
   const codeEl = document.getElementById('source-code');
-
   let highlighted;
-  try {
-    highlighted = hljs.highlight(content, { language: lang }).value;
-  } catch {
-    highlighted = content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
+  try { highlighted = hljs.highlight(content, { language: lang }).value; }
+  catch { highlighted = content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   codeEl.innerHTML = highlighted;
-
-  const lines = content.split('\n');
-  const numEl = document.getElementById('ln-nums');
-  numEl.textContent = lines.map((_,i) => i + 1).join('\n');
+  document.getElementById('ln-nums').textContent = content.split('\n').map((_,i) => i + 1).join('\n');
 }
 
 // ── Main load ─────────────────────────────────────────────────────────────────
@@ -508,19 +545,17 @@ if (!url) {
   status.classList.add('error');
   status.querySelector('.spinner').style.display = 'none';
 } else {
-  const ext      = getExt(url);
-  const filename = decodeURIComponent(url).split('?')[0].split('/').pop();
+  const ext       = getExt(url);
+  const filename  = decodeURIComponent(url).split('?')[0].split('/').pop();
   const typeLabel = PREVIEW_TYPES[ext] || ext.toUpperCase() || 'FILE';
 
   document.getElementById('url-label').textContent = filename;
   document.getElementById('type-badge').textContent = typeLabel;
   const dlBtn = document.getElementById('btn-download');
-  dlBtn.href = url;
-  dlBtn.download = filename;
+  dlBtn.href = url; dlBtn.download = filename;
   document.title = filename + ' — SCHALE';
 
-  const hasPreview = ext in PREVIEW_TYPES;
-  if (!hasPreview) {
+  if (!(ext in PREVIEW_TYPES)) {
     document.getElementById('tab-preview').style.display = 'none';
     switchTab('source');
   }
