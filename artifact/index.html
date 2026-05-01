@@ -448,19 +448,21 @@ function renderPreview(ext, content) {
           return '<pre><code class="hljs language-' + (lang||'') + '">' + highlighted + '</code></pre>';
         };
         marked.use({ renderer });
-         function convertAsciiTables(md) {
-          const lines = md.split('\n').map(l => l.replace(/\r$/, ''));
+        function convertAsciiTables(md) {
+          const NL = String.fromCharCode(10);
+          const CR = String.fromCharCode(13);
+          const lines = md.split(NL).map(l => l[l.length-1] === CR ? l.slice(0,-1) : l);
           const out = [];
           let i = 0;
-          const isSep = l => /^\+[-+]+\+$/.test(l);
-          const isRow = l => l.startsWith('|');
+          const isSep = l => l[0] === '+' && l[l.length-1] === '+' && l.indexOf('-') > 0;
+          const isRow = l => l[0] === '|';
           while (i < lines.length) {
             if (isSep(lines[i])) {
               let j = i;
               const block = [];
               while (j < lines.length && (isSep(lines[j]) || isRow(lines[j]))) block.push(lines[j++]);
               const rows = block.filter(isRow)
-                               .map(l => l.slice(1, l.endsWith('|') ? -1 : l.length).split('|').map(c => c.trim()));
+                               .map(l => l.slice(1, l[l.length-1] === '|' ? -1 : l.length).split('|').map(c => c.trim()));
               if (rows.length >= 1) {
                 out.push('| ' + rows[0].join(' | ') + ' |');
                 out.push('| ' + rows[0].map(() => '---').join(' | ') + ' |');
@@ -470,7 +472,7 @@ function renderPreview(ext, content) {
             }
             out.push(lines[i++]);
           }
-          return out.join('\n');
+          return out.join(NL);
         }
         document.getElementById('md').innerHTML = marked.parse(convertAsciiTables(${JSON.stringify(content)}));
       <\/script>
