@@ -1,1 +1,94 @@
-placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Privacy Policy — Arona Bot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-dark.min.css">
+<style>
+  body {
+    margin: 0;
+    background: #0d1117;
+  }
+  .markdown-body {
+    box-sizing: border-box;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px;
+  }
+  @media (max-width: 767px) {
+    .markdown-body { padding: 24px; }
+  }
+  code {
+    background: rgba(175,184,193,0.2);
+    padding: 0.15em 0.4em;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+
+<h1>Privacy Policy — Arona Bot</h1>
+<p><strong>Last updated:</strong> 2026-07-26</p>
+
+<p>This policy describes the information handled by <strong>Arona Bot</strong>, a Discord bot powered by the Gemini API.</p>
+
+<h2>Information we may process</h2>
+<ul>
+<li>Discord user IDs, display names, guild IDs, channel IDs, and role info as needed for permissions</li>
+<li>Message content (for AI replies, tool use, and the message-history/vector-search feature)</li>
+<li>Voice channel state and audio during voice conversations (Arona joins voice calls and speaks using TTS with an RVC-converted voice)</li>
+<li>User-provided "saved information" key-value entries (facts the user explicitly asks Arona to remember, via the <code>saved_information</code> tool)</li>
+<li>Account-linking data (migration keys, linked Discord IDs) if you choose to link multiple accounts</li>
+<li>Chess game state, scheduled reminders/events, and other feature-specific inputs you provide</li>
+<li>Code or shell commands submitted for the sandboxed code-execution feature, and their output</li>
+</ul>
+
+<h2>Server-side retention</h2>
+<ul>
+<li><strong>Saved information</strong> (the <code>saved_information</code>/memory tool) is stored persistently in a SQLite database, per Discord user ID, until you delete it or request a full wipe (see below).</li>
+<li><strong>Message history</strong> used for AI context and semantic search is stored persistently (SQLite + vector embeddings), capped at roughly the most recent 600 messages per user, with older messages automatically pruned.</li>
+<li><strong>Channel/guild memory cutoffs</strong> (e.g. <code>!arona clear</code>) are stored as timestamps, not full message logs.</li>
+<li><strong>Sandbox code execution</strong> runs in an isolated Docker container per session; output logs and submitted scripts may be temporarily saved to disk during the run.</li>
+<li><strong>Account links</strong> (if you use the account-linking feature) merge your saved information and message history under a shared root account, and are stored until unlinked.</li>
+</ul>
+
+<h2>Third-party transmission</h2>
+<p>Depending on the feature you use, data may be sent to:</p>
+<ul>
+<li><strong>Google Gemini API</strong> (chat text, images, and tool-use requests) for AI responses</li>
+<li><strong>Web search</strong> (via <code>ddgs</code>) for search queries you trigger</li>
+<li><strong>SchaleDB</strong> for Blue Archive game data lookups</li>
+<li>Any other third-party APIs a specific feature integrates with</li>
+</ul>
+
+<h2>Purposes</h2>
+<p>We use this data to provide Arona Bot's features, diagnose and fix issues, prevent abuse (including anti-raid protection), and improve response quality. We do not sell your data or use it for profiling/advertising.</p>
+
+<h2>Your controls</h2>
+<ul>
+<li>Use the <code>saved_information</code> tool (via chat) to add, edit, or delete individual memory entries.</li>
+<li>Use <code>!arona clear</code> to stop Arona from reading messages sent before that point in a channel.</li>
+<li>Use <strong><code>!arona forgetme</code></strong> (then confirm) to permanently delete <strong>all</strong> saved information, message history, and account-link key associated with your Discord ID. If your account is linked to another account, you'll need to unlink first, since linked accounts share data.</li>
+<li>Deletion/access requests can also be made by contacting the operator directly (see Contact).</li>
+</ul>
+
+<h2>Retention and deletion</h2>
+<p>Data described above is kept while you use the bot, until you delete it yourself or request removal. There is currently no fixed automatic expiry for saved information or account links beyond the message-history cap described above.</p>
+
+<h2>Contact</h2>
+<ul>
+<li>Operator Discord: <strong>@idoldange</strong></li>
+</ul>
+
+<h2>Changes</h2>
+<p>This policy takes effect when posted. We will try to announce material changes reasonably (e.g. via bot announcement).</p>
+
+<p><em>This page reflects current operational practice and is not professional legal advice.</em></p>
+
+<p>© 2026 Arona Bot / idoldange</p>
+
+</article>
+</body>
+</html>
