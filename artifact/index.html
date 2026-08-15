@@ -264,7 +264,11 @@ const PREVIEW_TYPES = {
   html:'HTML', htm:'HTML', jsx:'React', tsx:'React', md:'Markdown',
   mermaid:'Mermaid', mmd:'Mermaid', svg:'SVG', json:'JSON', csv:'CSV', pdf:'PDF',
   png:'Image', jpg:'Image', jpeg:'Image', gif:'Image', webp:'Image', bmp:'Image', ico:'Image',
+  doc:'Word', docx:'Word', rtf:'Word',
+  xls:'Excel', xlsx:'Excel', xlsm:'Excel',
+  ppt:'PowerPoint', pptx:'PowerPoint',
 };
+const OFFICE_EXTS = ['doc','docx','rtf','xls','xlsx','xlsm','ppt','pptx'];
 const HLJS_LANG = {
   py:'python', js:'javascript', ts:'typescript', jsx:'javascript', tsx:'typescript',
   sh:'bash', bash:'bash', zsh:'bash', css:'css', scss:'scss', less:'less',
@@ -596,6 +600,13 @@ if (!url) {
     status.classList.add('hidden');
     rawContent = url;
     renderSource('txt', `/* PDF file — source not available */\n/* URL: ${url} */`);
+  } else if (OFFICE_EXTS.includes(ext)) {
+    // Office formats (Word/Excel/PowerPoint) rendered via Microsoft's Office Viewer.
+    // Requires the file URL to be publicly reachable (Microsoft's servers fetch it directly).
+    frame.src = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(url);
+    status.classList.add('hidden');
+    rawContent = url;
+    renderSource('txt', `/* Office file — source not available, rendered via Microsoft Office Viewer */\n/* URL: ${url} */`);
   } else {
     fetch(PROXY + encodeURIComponent(url))
       .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
