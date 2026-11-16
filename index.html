@@ -1,1 +1,115 @@
-Nothing here
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arona Bot</title>
+<meta name="description" content="Arona is a Blue Archive themed Discord AI assistant powered by Google Gemini.">
+<style>
+:root{
+  --bg:#fbfcfe;--ink:#1c2733;--mute:#66778a;--line:#e1e8f0;--link:#0b78e3;--soft:#eef3f9;
+  /* pixiv art crop (fractions of the full image). Currently panel 3 */
+  --cx:0;--cy:.499;--cw:1;--ch:.247;--ar:1.8;
+}
+:root[data-theme=dark]{--bg:#0e1621;--ink:#d9e3ee;--mute:#8497ab;--line:#1e2c3c;--link:#6cb4ff;--soft:#16222f}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1621;--ink:#d9e3ee;--mute:#8497ab;--line:#1e2c3c;--link:#6cb4ff;--soft:#16222f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.75 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:3px}
+.w{max-width:700px;margin:0 auto;padding:0 22px}
+header{border-bottom:1px solid var(--line);font-size:15px;line-height:1}
+header .w{display:flex;justify-content:space-between;align-items:center;height:60px}
+header b{font-size:16px;letter-spacing:-.01em}
+header nav a,header nav button{margin-left:20px;color:var(--mute);text-decoration:none}
+header nav button{font:inherit;background:none;border:0;padding:0;cursor:pointer}
+header nav a:hover,header nav button:hover{color:var(--ink)}
+h1{font-size:2.3rem;line-height:1.15;font-weight:800;letter-spacing:-.025em;margin:52px 0 12px}
+.meta{font-size:12.5px;line-height:1.4;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 32px}
+figure{margin:0 0 36px}
+.art{width:100%;aspect-ratio:var(--ar);border-radius:8px;background:var(--soft) no-repeat;background-image:var(--img);
+  background-size:calc(100%/var(--cw)) auto;
+  background-position:calc(var(--cx)/(1 - var(--cw) + .0001)*100%) calc(var(--cy)/(1 - var(--ch))*100%)}
+figcaption{font-size:13px;line-height:1.5;color:var(--mute);margin-top:10px}
+figcaption a{color:inherit}
+p{margin:0 0 1.2em}
+h2{font-size:1.3rem;font-weight:700;letter-spacing:-.01em;margin:2.4em 0 .6em}
+ul{padding-left:1.2em;margin:0 0 1.2em}li{margin-bottom:.5em}li::marker{color:var(--link)}
+li b{font-weight:650}
+code{font:.85em ui-monospace,Consolas,monospace;background:var(--soft);padding:2px 6px;border-radius:4px}
+footer{border-top:1px solid var(--line);margin-top:64px;padding:24px 0 56px;font-size:13px;line-height:1.6;color:var(--mute)}
+footer a{color:inherit}
+footer p{margin:0 0 8px}
+.cnt{display:flex;align-items:center;gap:10px;margin-top:14px}
+.cnt img{height:38px;image-rendering:pixelated}
+</style>
+</head>
+<body>
+<header><div class="w">
+  <b>Arona Bot</b>
+  <nav><a href="https://github.com/idoldange/Arona-AI" target="_blank" rel="noopener">Source</a><a href="https://discord.gg/mzeQTHgxWG" target="_blank" rel="noopener">Support</a><button id="theme">Theme</button></nav>
+</div></header>
+
+<main class="w">
+  <h1>Arona, a Blue Archive assistant for Discord</h1>
+  <p class="meta">Discord bot · Powered by Google Gemini · Fan project</p>
+
+  <figure>
+    <div class="art" id="art" role="img" aria-label="Arona, fan art panel"></div>
+    <figcaption>Art: <a href="https://www.pixiv.net/en/artworks/140631547" target="_blank" rel="noopener">フルスロットルでいくよ、アロナ</a> by ばかきんぐ on pixiv. All rights belong to the artist.</figcaption>
+  </figure>
+
+  <p>Arona is a Discord AI assistant themed around the Shittim Chest OS from Blue Archive. She chats, searches the web, runs code, looks up student data, and can join voice channels, all while keeping the personality of the game's Arona.</p>
+  <p><a href="https://discord.com/oauth2/authorize?client_id=1408687384962269307" target="_blank" rel="noopener"><b>Add Arona to your server</b></a>, join the <a href="https://discord.gg/mzeQTHgxWG" target="_blank" rel="noopener">support server</a>, or read the <a href="https://github.com/idoldange/Arona-AI" target="_blank" rel="noopener">source code</a>.</p>
+
+  <h2>What she can do</h2>
+  <ul>
+    <li><b>Memory.</b> Remembers Sensei's preferences across sessions.</li>
+    <li><b>Multimodal.</b> Understands images, video and audio.</li>
+    <li><b>Web search.</b> Live browsing and reverse image search.</li>
+    <li><b>Code execution.</b> Python and shell in isolated Docker containers.</li>
+    <li><b>Kivotos database.</b> Students, banners, events and raids from SchaleDB.</li>
+    <li><b>Voice.</b> Voice chat and text-to-speech in Arona's own voice.</li>
+  </ul>
+
+  <h2>Using her</h2>
+  <p>Mention her in any channel, or use the prefix <code>!arona</code>. You can also install her to your account and call <code>/arona</code> anywhere without inviting her to a server. The full command list is in the <a href="https://github.com/idoldange/Arona-AI#readme" target="_blank" rel="noopener">README</a>.</p>
+</main>
+
+<footer><div class="w">
+  <p>Fan project, not affiliated with Nexon Games or Yostar. Blue Archive and Arona belong to their respective owners.</p>
+  <p><a href="https://github.com/idoldange/Arona-AI/issues" target="_blank" rel="noopener">Bug reports</a> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></p>
+  <div class="cnt">Visitors <img alt="visitor counter" src="https://count.getloli.com/@AronaAIbyIdoldange?name=AronaAIbyidoldange&theme=rule34&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto"></div>
+</div></footer>
+
+<script>
+const root=document.documentElement;
+document.getElementById('theme').onclick=()=>{
+  const dark=getComputedStyle(root).getPropertyValue('--bg').trim()==='#0e1621';
+  root.dataset.theme=dark?'light':'dark';
+};
+// pixiv blocks hotlinking, so load through a proxy (jpg first, then png)
+(function(){
+  const art=document.getElementById('art');
+  const go=i=>{
+    const e=['jpg','png'][i]; if(!e) return;
+    const u='https://pixiv.re/140631547.'+e, im=new Image();
+    im.onload=()=>art.style.setProperty('--img','url('+u+')');
+    im.onerror=()=>go(i+1);
+    im.src=u;
+  };
+  go(0);
+})();
+</script>
+
+<script type="module">
+  import { BAClickFX } from 'https://cdn.jsdelivr.net/npm/ba-click-fx@1.3.15/dist/ba-click-fx.js';
+
+  const fx = new BAClickFX(
+  {
+    outputCompositing: 'browser-overlay',
+    hostCompositing: 'screen',
+    hostCompositingSurface: 'dom-backdrop',
+  });
+</script>
+</body>
+</html>
