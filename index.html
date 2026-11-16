@@ -8,22 +8,27 @@
 <style>
 :root{
   --bg:#fbfcfe;--ink:#1c2733;--mute:#66778a;--line:#e1e8f0;--link:#0b78e3;--soft:#eef3f9;
+  --bgimg:url(https://static.wikitide.net/bluearchivewiki/9/96/BG_AronaRoom.jpg);
   /* pixiv art crop (fractions of the full image). Currently panel 3 */
   --cx:0;--cy:.499;--cw:1;--ch:.247;--ar:1.8;
 }
-:root[data-theme=dark]{--bg:#0e1621;--ink:#d9e3ee;--mute:#8497ab;--line:#1e2c3c;--link:#6cb4ff;--soft:#16222f}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1621;--ink:#d9e3ee;--mute:#8497ab;--line:#1e2c3c;--link:#6cb4ff;--soft:#16222f}}
+:root[data-theme=dark]{--bg:#0e1621;--ink:#d9e3ee;--mute:#8497ab;--line:#1e2c3c;--link:#6cb4ff;--soft:#16222f;--bgimg:url(https://static.wikitide.net/bluearchivewiki/c/ca/BG_AronaRoom_Night.jpg)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1621;--ink:#d9e3ee;--mute:#8497ab;--line:#1e2c3c;--link:#6cb4ff;--soft:#16222f;--bgimg:url(https://static.wikitide.net/bluearchivewiki/c/ca/BG_AronaRoom_Night.jpg)}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.75 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:3px}
-.w{max-width:700px;margin:0 auto;padding:0 22px}
+body{background:#4a90d9}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--bgimg) center/cover no-repeat}
+.card{max-width:760px;margin:36px auto;background:var(--bg);border-radius:16px;box-shadow:0 12px 50px rgba(0,0,0,.3);overflow:hidden}
 header{border-bottom:1px solid var(--line);font-size:15px;line-height:1}
 header .w{display:flex;justify-content:space-between;align-items:center;height:60px}
-header b{font-size:16px;letter-spacing:-.01em}
+header b{font-size:16px}
 header nav a,header nav button{margin-left:20px;color:var(--mute);text-decoration:none}
 header nav button{font:inherit;background:none;border:0;padding:0;cursor:pointer}
 header nav a:hover,header nav button:hover{color:var(--ink)}
-h1{font-size:2.3rem;line-height:1.15;font-weight:800;letter-spacing:-.025em;margin:52px 0 12px}
+@media(max-width:560px){body{background:var(--bg)}body::before{display:none}.card{margin:0;border-radius:0;box-shadow:none}}
+.w{max-width:700px;margin:0 auto;padding:0 22px}
+h1{font-size:2.3rem;line-height:1.15;font-weight:800;letter-spacing:-.025em;margin:0 0 12px;padding-top:42px}
 .meta{font-size:12.5px;line-height:1.4;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 32px}
 figure{margin:0 0 36px}
 .art{width:100%;aspect-ratio:var(--ar);border-radius:8px;background:var(--soft) no-repeat;background-image:var(--img);
@@ -44,11 +49,12 @@ footer p{margin:0 0 8px}
 </style>
 </head>
 <body>
+
+<div class="card">
 <header><div class="w">
   <b>Arona Bot</b>
   <nav><a href="https://github.com/idoldange/Arona-AI" target="_blank" rel="noopener">Source</a><a href="https://discord.gg/mzeQTHgxWG" target="_blank" rel="noopener">Support</a><button id="theme">Theme</button></nav>
 </div></header>
-
 <main class="w">
   <h1>Arona, a Blue Archive assistant for Discord</h1>
   <p class="meta">Discord bot · Powered by Google Gemini · Fan project</p>
@@ -73,13 +79,15 @@ footer p{margin:0 0 8px}
 
   <h2>Using her</h2>
   <p>Mention her in any channel, or use the prefix <code>!arona</code>. You can also install her to your account and call <code>/arona</code> anywhere without inviting her to a server. The full command list is in the <a href="https://github.com/idoldange/Arona-AI#readme" target="_blank" rel="noopener">README</a>.</p>
-</main>
 
-<footer><div class="w">
-  <p>Fan project, not affiliated with Nexon Games or Yostar. Blue Archive and Arona belong to their respective owners.</p>
-  <p><a href="https://github.com/idoldange/Arona-AI/issues" target="_blank" rel="noopener">Bug reports</a> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></p>
-  <div class="cnt">Visitors <img alt="visitor counter" src="https://count.getloli.com/@AronaAIbyIdoldange?name=AronaAIbyidoldange&theme=rule34&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto"></div>
-</div></footer>
+  <footer>
+    <p>Fan project, not affiliated with Nexon Games or Yostar. Blue Archive and Arona belong to their respective owners.</p>
+    <p>Cover: Arona's room, from the <a href="https://bluearchive.wiki" target="_blank" rel="noopener">Blue Archive Wiki</a>. &copy; Nexon Games.</p>
+    <p><a href="https://github.com/idoldange/Arona-AI/issues" target="_blank" rel="noopener">Bug reports</a> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></p>
+    <div class="cnt">Visitors <img alt="visitor counter" src="https://count.getloli.com/@AronaAIbyIdoldange?name=AronaAIbyidoldange&theme=rule34&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto"></div>
+  </footer>
+</main>
+</div>
 
 <script>
 const root=document.documentElement;
